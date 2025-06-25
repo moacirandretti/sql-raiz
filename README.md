@@ -1,4 +1,4 @@
-# SQLRaiz
+# SQLRaiz 🌵
 
 🚀 **SQLRaiz** highlights SQL inside template strings preceded by `/* sql */` in TypeScript and JavaScript files!
 
