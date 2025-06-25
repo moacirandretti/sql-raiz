@@ -1,0 +1,17 @@
+# Node modules
+node_modules/
+
+# VSCode extension build output
+out/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# VSCode settings (optional)
+.vscode/
+
+# Environment files (optional)
+.env
+.env.local
