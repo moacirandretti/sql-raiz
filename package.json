@@ -1,0 +1,35 @@
+{
+  "name": "sqlraiz",
+  "displayName": "SQLRaiz",
+  "description": "Destaca SQL em template strings precedidas de /* sql */ em arquivos TypeScript e JavaScript.",
+  "version": "0.0.1",
+  "publisher": "Moacir Andretti",
+  "engines": {
+    "vscode": "^1.50.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "contributes": {
+    "grammars": [
+      {
+        "scopeName": "sqlraiz.embedded.sql",
+        "path": "./syntaxes/sqlraiz.tmLanguage.json",
+        "injectTo": [
+          "source.ts",
+          "source.js"
+        ]
+      }
+    ]
+  },
+  "activationEvents": [],
+  "main": "./out/extension.js",
+  "scripts": {
+    "vscode:prepublish": "tsc -p ./"
+  },
+  "devDependencies": {
+    "typescript": "^4.0.0",
+    "vscode": "^1.1.36",
+    "@types/node": "^14.0.0"
+  }
+}

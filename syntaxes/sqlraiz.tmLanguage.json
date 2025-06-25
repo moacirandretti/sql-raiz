@@ -1,0 +1,20 @@
+{
+  "scopeName": "sqlraiz.embedded.sql",
+  "injectionSelector": "L:source.ts, L:source.js",
+  "patterns": [
+    {
+      "name": "source.sql.embedded",
+      "begin": "(\\/\\*\\s*sql\\s*\\*\\/\\s*)`",
+      "beginCaptures": {
+        "1": { "name": "comment.block.documentation.sqlraiz" }
+      },
+      "end": "`",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    }
+  ]
+}
