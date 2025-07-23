@@ -15,3 +15,9 @@ yarn-error.log*
 # Environment files (optional)
 .env
 .env.local
+
+# Test artifacts
+temp-test/
+
+# Example files (for documentation only)
+examples/

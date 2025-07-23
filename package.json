@@ -1,8 +1,8 @@
 {
   "name": "sqlraiz",
   "displayName": "SQLRaiz",
-  "description": "Destaca SQL em template strings precedidas de /* sql */ em arquivos TypeScript e JavaScript.",
-  "version": "0.0.1",
+  "description": "Destaca SQL em template strings com suporte para TypeScript, JavaScript, Python e GoLang.",
+  "version": "0.0.2",
   "publisher": "Moacir Andretti",
   "engines": {
     "vscode": "^1.50.0"
@@ -11,25 +11,119 @@
     "Programming Languages"
   ],
   "contributes": {
+    "configuration": {
+      "title": "SQLRaiz",
+      "properties": {
+        "sqlraiz.enabled": {
+          "type": "boolean",
+          "default": true,
+          "description": "Ativa ou desativa o SQL highlighting"
+        },
+        "sqlraiz.languages": {
+          "type": "object",
+          "default": {
+            "typescript": true,
+            "javascript": true,
+            "python": true,
+            "go": true
+          },
+          "properties": {
+            "typescript": {
+              "type": "boolean",
+              "description": "Ativa SQL highlighting para TypeScript"
+            },
+            "javascript": {
+              "type": "boolean",
+              "description": "Ativa SQL highlighting para JavaScript"
+            },
+            "python": {
+              "type": "boolean",
+              "description": "Ativa SQL highlighting para Python"
+            },
+            "go": {
+              "type": "boolean",
+              "description": "Ativa SQL highlighting para GoLang"
+            }
+          },
+          "description": "Configuração de linguagens suportadas"
+        },
+        "sqlraiz.commentTriggers": {
+          "type": "object",
+          "default": {
+            "typescript": "/* sql */",
+            "javascript": "/* sql */",
+            "python": "# sql",
+            "go": "/* sql */"
+          },
+          "properties": {
+            "typescript": {
+              "type": "string",
+              "description": "Comentário que ativa o highlighting em TypeScript"
+            },
+            "javascript": {
+              "type": "string",
+              "description": "Comentário que ativa o highlighting em JavaScript"
+            },
+            "python": {
+              "type": "string",
+              "description": "Comentário que ativa o highlighting em Python"
+            },
+            "go": {
+              "type": "string",
+              "description": "Comentário que ativa o highlighting em GoLang"
+            }
+          },
+          "description": "Comentários que ativam o SQL highlighting para cada linguagem"
+        }
+      }
+    },
     "grammars": [
       {
-        "scopeName": "sqlraiz.embedded.sql",
-        "path": "./syntaxes/sqlraiz.tmLanguage.json",
+        "scopeName": "sqlraiz.embedded.sql.typescript",
+        "path": "./syntaxes/typescript.tmLanguage.json",
         "injectTo": [
-          "source.ts",
+          "source.ts"
+        ]
+      },
+      {
+        "scopeName": "sqlraiz.embedded.sql.javascript",
+        "path": "./syntaxes/javascript.tmLanguage.json",
+        "injectTo": [
           "source.js"
+        ]
+      },
+      {
+        "scopeName": "sqlraiz.embedded.sql.python",
+        "path": "./syntaxes/python.tmLanguage.json",
+        "injectTo": [
+          "source.python"
+        ]
+      },
+      {
+        "scopeName": "sqlraiz.embedded.sql.go",
+        "path": "./syntaxes/go.tmLanguage.json",
+        "injectTo": [
+          "source.go"
         ]
       }
     ]
   },
-  "activationEvents": [],
+  "activationEvents": [
+    "onStartupFinished"
+  ],
   "main": "./out/extension.js",
   "scripts": {
-    "vscode:prepublish": "tsc -p ./"
+    "vscode:prepublish": "tsc -p ./",
+    "test": "npm run compile && node ./out/test/runTest.js",
+    "compile": "tsc -p ./"
   },
   "devDependencies": {
-    "typescript": "^4.0.0",
-    "vscode": "^1.1.36",
-    "@types/node": "^14.0.0"
+    "@types/mocha": "^8.2.3",
+    "@types/node": "^14.0.0",
+    "@types/vscode": "^1.102.0",
+    "@vscode/test-electron": "^2.5.2",
+    "glob": "^11.0.3",
+    "mocha": "^8.4.0",
+    "typescript": "^4.0.0"
   }
 }
