@@ -1,7 +1,7 @@
 {
   "name": "sqlraiz",
   "displayName": "SQLRaiz",
-  "description": "Destaca SQL em template strings com suporte para TypeScript, JavaScript, Python e GoLang.",
+  "description": "SQLRaiz highlights SQL inside template strings with support for TypeScript, JavaScript, Python, and GoLang.",
   "version": "0.0.2",
   "publisher": "Moacir Andretti",
   "engines": {
@@ -17,7 +17,7 @@
         "sqlraiz.enabled": {
           "type": "boolean",
           "default": true,
-          "description": "Ativa ou desativa o SQL highlighting"
+          "description": "Enable or disable SQL highlighting"
         },
         "sqlraiz.languages": {
           "type": "object",
@@ -30,22 +30,22 @@
           "properties": {
             "typescript": {
               "type": "boolean",
-              "description": "Ativa SQL highlighting para TypeScript"
+              "description": "Enable SQL highlighting for TypeScript"
             },
             "javascript": {
               "type": "boolean",
-              "description": "Ativa SQL highlighting para JavaScript"
+              "description": "Enable SQL highlighting for JavaScript"
             },
             "python": {
               "type": "boolean",
-              "description": "Ativa SQL highlighting para Python"
+              "description": "Enable SQL highlighting for Python"
             },
             "go": {
               "type": "boolean",
-              "description": "Ativa SQL highlighting para GoLang"
+              "description": "Enable SQL highlighting for GoLang"
             }
           },
-          "description": "Configuração de linguagens suportadas"
+          "description": "Supported languages configuration"
         },
         "sqlraiz.commentTriggers": {
           "type": "object",
@@ -58,22 +58,22 @@
           "properties": {
             "typescript": {
               "type": "string",
-              "description": "Comentário que ativa o highlighting em TypeScript"
+              "description": "Comment that activates highlighting in TypeScript"
             },
             "javascript": {
               "type": "string",
-              "description": "Comentário que ativa o highlighting em JavaScript"
+              "description": "Comment that activates highlighting in JavaScript"
             },
             "python": {
               "type": "string",
-              "description": "Comentário que ativa o highlighting em Python"
+              "description": "Comment that activates highlighting in Python"
             },
             "go": {
               "type": "string",
-              "description": "Comentário que ativa o highlighting em GoLang"
+              "description": "Comment that activates highlighting in GoLang"
             }
           },
-          "description": "Comentários que ativam o SQL highlighting para cada linguagem"
+          "description": "Comments that activate SQL highlighting for each language"
         }
       }
     },
