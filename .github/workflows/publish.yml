@@ -9,6 +9,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Necessário para push de commits e tags, e criar releases
     
     steps:
       - name: Checkout code
