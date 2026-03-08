@@ -1,6 +1,6 @@
 {
-  "scopeName": "sqlraiz.embedded.sql.typescript",
-  "injectionSelector": "L:source.ts",
+  "scopeName": "sqlraiz.embedded.sql.javascript",
+  "injectionSelector": "L:source.js",
   "patterns": [
     {
       "name": "source.sql.embedded",

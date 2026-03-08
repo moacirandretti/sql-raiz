@@ -1,0 +1,34 @@
+{
+  "scopeName": "sqlraiz.embedded.sql.go",
+  "injectionSelector": "L:source.go",
+  "patterns": [
+    {
+      "name": "source.sql.embedded",
+      "begin": "(\\/\\*\\s*sql\\s*\\*\\/\\s*)`",
+      "beginCaptures": {
+        "1": { "name": "comment.block.documentation.sqlraiz" }
+      },
+      "end": "`",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "name": "source.sql.embedded",
+      "begin": "(\\/\\*\\s*sql\\s*\\*\\/\\s*)\"",
+      "beginCaptures": {
+        "1": { "name": "comment.block.documentation.sqlraiz" }
+      },
+      "end": "\"",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    }
+  ]
+}

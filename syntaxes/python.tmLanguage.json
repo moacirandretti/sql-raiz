@@ -1,0 +1,90 @@
+{
+  "scopeName": "sqlraiz.embedded.sql.python",
+  "injectionSelector": "L:source.python",
+  "patterns": [
+    {
+      "name": "source.sql.embedded",
+      "begin": "(#\\s*sql\\s*)f'",
+      "beginCaptures": {
+        "1": { "name": "comment.line.documentation.sqlraiz" }
+      },
+      "end": "'",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "name": "source.sql.embedded",
+      "begin": "(#\\s*sql\\s*)f\"",
+      "beginCaptures": {
+        "1": { "name": "comment.line.documentation.sqlraiz" }
+      },
+      "end": "\"",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "name": "source.sql.embedded",
+      "begin": "(#\\s*sql\\s*)\"\"\"",
+      "beginCaptures": {
+        "1": { "name": "comment.line.documentation.sqlraiz" }
+      },
+      "end": "\"\"\"",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "name": "source.sql.embedded",
+      "begin": "(#\\s*sql\\s*)'''",
+      "beginCaptures": {
+        "1": { "name": "comment.line.documentation.sqlraiz" }
+      },
+      "end": "'''",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "name": "source.sql.embedded",
+      "begin": "(#\\s*sql\\s*)\"",
+      "beginCaptures": {
+        "1": { "name": "comment.line.documentation.sqlraiz" }
+      },
+      "end": "\"",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    },
+    {
+      "name": "source.sql.embedded",
+      "begin": "(#\\s*sql\\s*)'",
+      "beginCaptures": {
+        "1": { "name": "comment.line.documentation.sqlraiz" }
+      },
+      "end": "'",
+      "contentName": "source.sql",
+      "patterns": [
+        {
+          "include": "source.sql"
+        }
+      ]
+    }
+  ]
+}
