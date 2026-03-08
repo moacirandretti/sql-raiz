@@ -4,6 +4,10 @@
   "description": "SQLRaiz highlights SQL inside template strings with support for TypeScript, JavaScript, Python, and GoLang.",
   "version": "0.0.2",
   "publisher": "Moacir Andretti",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moacirandretti/sql-raiz.git"
+  },
   "engines": {
     "vscode": "^1.50.0"
   },

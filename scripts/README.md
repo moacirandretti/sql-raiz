@@ -1,0 +1,56 @@
+# Scripts de Automação
+
+## bump-version.js
+
+Script para automatizar o versionamento semântico baseado no título do Pull Request.
+
+### Uso
+
+```bash
+node scripts/bump-version.js "TITULO_DO_PR"
+```
+
+Ou usando variável de ambiente:
+
+```bash
+PR_TITLE="FEATURE: Nova funcionalidade" node scripts/bump-version.js
+```
+
+### Convenção de Versionamento (SemVer)
+
+O script segue a convenção de versionamento semântico (X.Y.Z):
+
+- **BREAKING**: Incrementa versão MAJOR (X.0.0)
+  - Mudanças incompatíveis com versões anteriores
+  - Exemplo: `BREAKING: Remove deprecated API`
+
+- **FEATURE**: Incrementa versão MINOR (x.Y.0)
+  - Funcionalidades adicionadas de maneira compatível
+  - Exemplo: `FEATURE: Add Python support`
+
+- **PATCH ou HOTFIX**: Incrementa versão PATCH (x.y.Z)
+  - Correções de bugs sem afetar a compatibilidade
+  - Exemplo: `PATCH: Fix syntax highlighting bug`
+  - Exemplo: `HOTFIX: Critical security fix`
+
+### Funcionamento
+
+1. Lê a versão atual do `package.json`
+2. Determina o tipo de incremento baseado no título do PR
+3. Calcula a nova versão seguindo SemVer
+4. Atualiza o `package.json` com a nova versão
+5. Cria um commit com a mudança
+6. Cria uma tag git no formato `vX.Y.Z`
+
+### Exemplo
+
+```bash
+# Versão atual: 0.0.2
+node scripts/bump-version.js "FEATURE: Add GoLang support"
+# Nova versão: 0.1.0
+# Tag criada: v0.1.0
+```
+
+### Uso no GitHub Actions
+
+O script é executado automaticamente pelo workflow `publish.yml` quando há um merge na branch master/main.
