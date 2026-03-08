@@ -43,7 +43,7 @@ jobs:
 
       - name: Push changes and tags
         run: |
-          git push origin master --follow-tags || git push origin main --follow-tags
+          git push origin ${{ github.ref_name }} --follow-tags
 
       - name: Get new version
         id: get_version
@@ -86,10 +86,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish to VS Code Marketplace
-        if: env.VSCE_PAT != ''
+        if: secrets.VSCE_PAT != ''
         run: vsce publish -p ${{ secrets.VSCE_PAT }}
-        env:
-          VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
       - name: Publish Summary
         run: |

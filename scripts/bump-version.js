@@ -41,7 +41,7 @@ function incrementVersion(currentVersion, versionType) {
       version.patch += 1;
       break;
     default:
-      throw new Error(`Tipo de versão desconhecido: ${versionType}`);
+      throw new Error(`Tipo de versão desconhecida: ${versionType}`);
   }
   
   return `${version.major}.${version.minor}.${version.patch}`;

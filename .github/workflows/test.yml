@@ -11,7 +11,6 @@ on:
 jobs:
   test:
     runs-on: ubuntu-latest
-    continue-on-error: true  # Permite que a pipeline falhe sem bloquear
     
     steps:
       - name: Checkout code
@@ -28,10 +27,10 @@ jobs:
 
       - name: Run tests
         run: npm test
-        continue-on-error: true  # Permite que os testes falhem
+        continue-on-error: true  # Permite que os testes falhem sem bloquear o workflow
 
       - name: Test Summary
         if: always()
         run: |
           echo "Tests completed. Check logs above for details."
-          echo "Note: Test failures are allowed and won't block the pipeline."
+          echo "Note: Test failures are allowed and won't block the workflow."
