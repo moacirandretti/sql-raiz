@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import { 
   JavaScriptGrammarGenerator, 
   PythonGrammarGenerator, 
@@ -46,79 +45,79 @@ class MockConfigurationService {
   }
 }
 
-suite('Grammar Generator Test Suite', () => {
+describe('Grammar Generator Test Suite', () => {
   let mockConfigService: MockConfigurationService;
 
-  setup(() => {
+  beforeEach(() => {
     mockConfigService = new MockConfigurationService();
   });
 
-  test('JavaScript Grammar Generator should create correct grammar', () => {
+  it('JavaScript Grammar Generator should create correct grammar', () => {
     const generator = new JavaScriptGrammarGenerator(mockConfigService as any);
     const grammar = generator.generateGrammar('javascript');
 
-    assert.strictEqual(grammar.scopeName, 'sqlraiz.embedded.sql.javascript');
-    assert.strictEqual(grammar.injectionSelector, 'L:source.js');
-    assert.strictEqual(grammar.patterns.length, 1);
-    assert.strictEqual(grammar.patterns[0].name, 'source.sql.embedded');
-    assert.strictEqual(grammar.patterns[0].contentName, 'source.sql');
+    expect(grammar.scopeName).toBe('sqlraiz.embedded.sql.javascript');
+    expect(grammar.injectionSelector).toBe('L:source.js');
+    expect(grammar.patterns.length).toBe(1);
+    expect(grammar.patterns[0].name).toBe('source.sql.embedded');
+    expect(grammar.patterns[0].contentName).toBe('source.sql');
   });
 
-  test('TypeScript Grammar Generator should create correct grammar', () => {
+  it('TypeScript Grammar Generator should create correct grammar', () => {
     const generator = new JavaScriptGrammarGenerator(mockConfigService as any);
     const grammar = generator.generateGrammar('typescript');
 
-    assert.strictEqual(grammar.scopeName, 'sqlraiz.embedded.sql.typescript');
-    assert.strictEqual(grammar.injectionSelector, 'L:source.ts');
-    assert.strictEqual(grammar.patterns.length, 1);
+    expect(grammar.scopeName).toBe('sqlraiz.embedded.sql.typescript');
+    expect(grammar.injectionSelector).toBe('L:source.ts');
+    expect(grammar.patterns.length).toBe(1);
   });
 
-  test('Python Grammar Generator should create correct grammar', () => {
+  it('Python Grammar Generator should create correct grammar', () => {
     const generator = new PythonGrammarGenerator(mockConfigService as any);
     const grammar = generator.generateGrammar('python');
 
-    assert.strictEqual(grammar.scopeName, 'sqlraiz.embedded.sql.python');
-    assert.strictEqual(grammar.injectionSelector, 'L:source.python');
-    assert.strictEqual(grammar.patterns.length, 6); // f-strings, triple quotes, regular strings
+    expect(grammar.scopeName).toBe('sqlraiz.embedded.sql.python');
+    expect(grammar.injectionSelector).toBe('L:source.python');
+    expect(grammar.patterns.length).toBe(6); // f-strings, triple quotes, regular strings
     
     // Test that all pattern types are included
     const patterns = grammar.patterns;
-    assert.ok(patterns.some(p => p.begin.includes("f'")));
-    assert.ok(patterns.some(p => p.begin.includes('f"')));
-    assert.ok(patterns.some(p => p.begin.includes('"""')));
-    assert.ok(patterns.some(p => p.begin.includes("'''")));
+    expect(patterns.some(p => p.begin.includes("f'"))).toBe(true);
+    expect(patterns.some(p => p.begin.includes('f"'))).toBe(true);
+    expect(patterns.some(p => p.begin.includes('"""'))).toBe(true);
+    expect(patterns.some(p => p.begin.includes("'''"))).toBe(true);
   });
 
-  test('Go Grammar Generator should create correct grammar', () => {
+  it('Go Grammar Generator should create correct grammar', () => {
     const generator = new GoGrammarGenerator(mockConfigService as any);
     const grammar = generator.generateGrammar('go');
 
-    assert.strictEqual(grammar.scopeName, 'sqlraiz.embedded.sql.go');
-    assert.strictEqual(grammar.injectionSelector, 'L:source.go');
-    assert.strictEqual(grammar.patterns.length, 2); // Raw strings and regular strings
+    expect(grammar.scopeName).toBe('sqlraiz.embedded.sql.go');
+    expect(grammar.injectionSelector).toBe('L:source.go');
+    expect(grammar.patterns.length).toBe(2); // Raw strings and regular strings
   });
 
-  test('Grammar Generator Factory should create correct generators', () => {
+  it('Grammar Generator Factory should create correct generators', () => {
     const factory = new GrammarGeneratorFactory(mockConfigService as any);
 
     const jsGenerator = factory.createGenerator('javascript');
-    assert.ok(jsGenerator instanceof JavaScriptGrammarGenerator);
+    expect(jsGenerator).toBeInstanceOf(JavaScriptGrammarGenerator);
 
     const tsGenerator = factory.createGenerator('typescript');
-    assert.ok(tsGenerator instanceof JavaScriptGrammarGenerator);
+    expect(tsGenerator).toBeInstanceOf(JavaScriptGrammarGenerator);
 
     const pyGenerator = factory.createGenerator('python');
-    assert.ok(pyGenerator instanceof PythonGrammarGenerator);
+    expect(pyGenerator).toBeInstanceOf(PythonGrammarGenerator);
 
     const goGenerator = factory.createGenerator('go');
-    assert.ok(goGenerator instanceof GoGrammarGenerator);
+    expect(goGenerator).toBeInstanceOf(GoGrammarGenerator);
   });
 
-  test('Grammar Generator Factory should throw error for unsupported language', () => {
+  it('Grammar Generator Factory should throw error for unsupported language', () => {
     const factory = new GrammarGeneratorFactory(mockConfigService as any);
 
-    assert.throws(() => {
+    expect(() => {
       factory.createGenerator('unsupported' as any);
-    }, /Unsupported language/);
+    }).toThrow(/Unsupported language/);
   });
 });
