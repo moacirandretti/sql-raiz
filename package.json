@@ -4,6 +4,10 @@
   "description": "Destaca SQL em template strings com suporte para TypeScript, JavaScript, Python e GoLang.",
   "version": "0.0.2",
   "publisher": "Moacir Andretti",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/moacirandretti/sql-raiz.git"
+  },
   "engines": {
     "vscode": "^1.50.0"
   },

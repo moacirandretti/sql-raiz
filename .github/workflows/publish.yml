@@ -1,0 +1,106 @@
+name: Publish Extension
+
+on:
+  push:
+    branches:
+      - master
+      - main
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Necessário para obter o histórico completo e tags
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Get PR Title
+        id: pr_title
+        run: |
+          # Tenta obter o título do PR do último commit merged
+          PR_TITLE=$(git log -1 --pretty=%B | head -n 1)
+          echo "PR Title: $PR_TITLE"
+          echo "pr_title=$PR_TITLE" >> $GITHUB_OUTPUT
+
+      - name: Bump version and create tag
+        id: bump_version
+        env:
+          PR_TITLE: ${{ steps.pr_title.outputs.pr_title }}
+        run: |
+          node scripts/bump-version.js
+
+      - name: Push changes and tags
+        run: |
+          git push origin master --follow-tags || git push origin main --follow-tags
+
+      - name: Get new version
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $VERSION"
+
+      - name: Build extension
+        run: npm run vscode:prepublish
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Package extension
+        run: vsce package
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            ## Release v${{ steps.get_version.outputs.version }}
+            
+            Publicação automática da extensão SQLRaiz.
+            
+            **PR Title:** ${{ steps.pr_title.outputs.pr_title }}
+            
+            ### Instalação
+            Baixe o arquivo `.vsix` abaixo e instale via VS Code:
+            ```
+            code --install-extension sqlraiz-${{ steps.get_version.outputs.version }}.vsix
+            ```
+          files: |
+            *.vsix
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to VS Code Marketplace
+        if: env.VSCE_PAT != ''
+        run: vsce publish -p ${{ secrets.VSCE_PAT }}
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+
+      - name: Publish Summary
+        run: |
+          echo "## ✅ Publicação Concluída" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Versão:** v${{ steps.get_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**PR Title:** ${{ steps.pr_title.outputs.pr_title }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          if [ -n "${{ secrets.VSCE_PAT }}" ]; then
+            echo "✅ Extensão publicada no VS Code Marketplace" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "⚠️  VSCE_PAT não configurado - Extensão não foi publicada no Marketplace" >> $GITHUB_STEP_SUMMARY
+            echo "Configure o secret VSCE_PAT para habilitar a publicação automática" >> $GITHUB_STEP_SUMMARY
+          fi
