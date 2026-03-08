@@ -1,4 +1,3 @@
-import * as assert from 'assert';
 import { ConfigurationService } from '../configurationService';
 import { workspace, WorkspaceConfiguration } from 'vscode';
 
@@ -28,49 +27,47 @@ const mockWorkspaceConfiguration = {
   }
 } as WorkspaceConfiguration;
 
-// Mock workspace.getConfiguration
-const originalGetConfiguration = workspace.getConfiguration;
-workspace.getConfiguration = () => mockWorkspaceConfiguration;
-
-suite('ConfigurationService Test Suite', () => {
+describe('ConfigurationService Test Suite', () => {
   let configService: ConfigurationService;
 
-  setup(() => {
+  beforeEach(() => {
+    // Mock workspace.getConfiguration before creating the service
+    (workspace.getConfiguration as jest.Mock).mockReturnValue(mockWorkspaceConfiguration);
     configService = new ConfigurationService();
   });
 
-  teardown(() => {
-    // Restore original function
-    workspace.getConfiguration = originalGetConfiguration;
+  afterEach(() => {
+    // Clear mocks after each test
+    jest.clearAllMocks();
   });
 
-  test('Should get configuration correctly', () => {
+  it('Should get configuration correctly', () => {
     const config = configService.getConfig();
     
-    assert.strictEqual(config.enabled, true);
-    assert.strictEqual(config.languages.typescript, true);
-    assert.strictEqual(config.languages.javascript, true);
-    assert.strictEqual(config.languages.python, true);
-    assert.strictEqual(config.languages.go, true);
-    assert.strictEqual(config.commentTriggers.typescript, '/* sql */');
-    assert.strictEqual(config.commentTriggers.python, '# sql');
+    expect(config.enabled).toBe(true);
+    expect(config.languages.typescript).toBe(true);
+    expect(config.languages.javascript).toBe(true);
+    expect(config.languages.python).toBe(true);
+    expect(config.languages.go).toBe(true);
+    expect(config.commentTriggers.typescript).toBe('/* sql */');
+    expect(config.commentTriggers.python).toBe('# sql');
   });
 
-  test('Should check if language is enabled correctly', () => {
-    assert.strictEqual(configService.isLanguageEnabled('typescript'), true);
-    assert.strictEqual(configService.isLanguageEnabled('javascript'), true);
-    assert.strictEqual(configService.isLanguageEnabled('python'), true);
-    assert.strictEqual(configService.isLanguageEnabled('go'), true);
+  it('Should check if language is enabled correctly', () => {
+    expect(configService.isLanguageEnabled('typescript')).toBe(true);
+    expect(configService.isLanguageEnabled('javascript')).toBe(true);
+    expect(configService.isLanguageEnabled('python')).toBe(true);
+    expect(configService.isLanguageEnabled('go')).toBe(true);
   });
 
-  test('Should get comment trigger correctly', () => {
-    assert.strictEqual(configService.getCommentTrigger('typescript'), '/* sql */');
-    assert.strictEqual(configService.getCommentTrigger('javascript'), '/* sql */');
-    assert.strictEqual(configService.getCommentTrigger('python'), '# sql');
-    assert.strictEqual(configService.getCommentTrigger('go'), '/* sql */');
+  it('Should get comment trigger correctly', () => {
+    expect(configService.getCommentTrigger('typescript')).toBe('/* sql */');
+    expect(configService.getCommentTrigger('javascript')).toBe('/* sql */');
+    expect(configService.getCommentTrigger('python')).toBe('# sql');
+    expect(configService.getCommentTrigger('go')).toBe('/* sql */');
   });
 
-  test('Should check if globally enabled correctly', () => {
-    assert.strictEqual(configService.isGloballyEnabled(), true);
+  it('Should check if globally enabled correctly', () => {
+    expect(configService.isGloballyEnabled()).toBe(true);
   });
 });
