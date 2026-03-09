@@ -1,0 +1,110 @@
+name: Publish Extension
+
+on:
+  pull_request:
+    branches:
+      - master
+      - main
+    types:
+      - closed
+
+jobs:
+  publish:
+    # Executa apenas quando o PR foi de fato merged (não apenas fechado)
+    if: github.event.pull_request.merged == true
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write  # Necessário para push de commits e tags, e criar releases
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          # Faz checkout da branch base (master/main) após o merge
+          ref: ${{ github.event.pull_request.base.ref }}
+          fetch-depth: 0  # Necessário para obter o histórico completo e tags
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Bump version and create tag
+        id: bump_version
+        env:
+          # Usa o título real do PR disponível no evento (confiável e preciso)
+          PR_TITLE: ${{ github.event.pull_request.title }}
+        run: |
+          echo "PR Title: $PR_TITLE"
+          node scripts/bump-version.js
+
+      - name: Push changes and tags
+        run: |
+          # O commit de bump usa [skip ci] na mensagem para evitar re-disparar workflows de push
+          git push origin ${{ github.event.pull_request.base.ref }} --follow-tags
+
+      - name: Get new version
+        id: get_version
+        run: |
+          VERSION=$(node -p "require('./package.json').version")
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
+          echo "New version: $VERSION"
+
+      - name: Build extension
+        run: npm run vscode:prepublish
+
+      - name: Install vsce
+        run: npm install -g @vscode/vsce
+
+      - name: Package extension
+        run: vsce package
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
+        with:
+          tag_name: v${{ steps.get_version.outputs.version }}
+          name: Release v${{ steps.get_version.outputs.version }}
+          body: |
+            ## Release v${{ steps.get_version.outputs.version }}
+
+            Publicação automática da extensão SQLRaiz.
+
+            **PR Title:** ${{ github.event.pull_request.title }}
+
+            ### Instalação
+            Baixe o arquivo `.vsix` abaixo e instale via VS Code:
+            ```
+            code --install-extension sqlraiz-${{ steps.get_version.outputs.version }}.vsix
+            ```
+          files: |
+            *.vsix
+          draft: false
+          prerelease: false
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Publish to VS Code Marketplace
+        if: ${{ secrets.VSCE_PAT != '' }}
+        run: vsce publish -p ${{ secrets.VSCE_PAT }}
+
+      - name: Publish Summary
+        run: |
+          echo "## ✅ Publicação Concluída" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Versão:** v${{ steps.get_version.outputs.version }}" >> $GITHUB_STEP_SUMMARY
+          echo "**PR Title:** ${{ github.event.pull_request.title }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish Summary - Marketplace
+        if: ${{ secrets.VSCE_PAT != '' }}
+        run: echo "✅ Extensão publicada no VS Code Marketplace" >> $GITHUB_STEP_SUMMARY
+
+      - name: Publish Summary - No Marketplace
+        if: ${{ secrets.VSCE_PAT == '' }}
+        run: |
+          echo "⚠️  VSCE_PAT não configurado - Extensão não foi publicada no Marketplace" >> $GITHUB_STEP_SUMMARY
+          echo "Configure o secret VSCE_PAT para habilitar a publicação automática" >> $GITHUB_STEP_SUMMARY
